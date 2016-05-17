@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * CoScale API client used to create Events and inserting event data.
- * 
+ *
  * @author cristi
  *
  */
@@ -23,7 +23,7 @@ public class EventsApi {
 
     /**
      * EventsApi constructor.
-     * 
+     *
      * @param api ApiClient.
      */
     public EventsApi(ApiClient api) {
@@ -34,7 +34,7 @@ public class EventsApi {
 
     /**
      * all is used to get a list of all events.
-     * 
+     *
      * @return List<Event>
      * @throws IOException
      */
@@ -45,7 +45,7 @@ public class EventsApi {
 
     /**
      * all is used to get a list of all events.
-     * 
+     *
      * @param options
      *            which contain query parameters
      * @return List<Event>
@@ -53,29 +53,27 @@ public class EventsApi {
      */
     public List<Event> all(Options options) throws IOException {
         String url = "/events/";
-        boolean first = true;
-        url += (first ? "?" : "&") + options.query();
-        first = false;
+        url += (options.hasQuery() ? "?" : "&") + options.query();
         return api.callWithAuth("GET", url, null, new TypeReference<List<Event>>() {
         });
     }
 
     /**
      * get a event by the id.
-     * 
+     *
      * @param id
      *            id of the event.
      * @return Event
      * @throws IOException
      */
     public Event get(long id) throws IOException {
-        return api.callWithAuth("GET", "/events/" + id + "/", null, new TypeReference<Event>() {
+        return api.callWithAuth("GET", "/events/" + id + '/', null, new TypeReference<Event>() {
         });
     }
 
     /**
      * Insert a new event.
-     * 
+     *
      * @param event
      *            EventInsert containing data for the new event.
      * @return EventInsert the event object.
@@ -88,14 +86,14 @@ public class EventsApi {
 
     /**
      * Delete a event by id.
-     * 
+     *
      * @param id
      *            id of the event.
      * @return Msg the response message.
      * @throws IOException
      */
     public Msg delete(long id) throws IOException {
-        return api.callWithAuth("DELETE", "/events/" + id + "/", null, new TypeReference<Msg>() {
+        return api.callWithAuth("DELETE", "/events/" + id + '/', null, new TypeReference<Msg>() {
         });
     }
 
@@ -106,7 +104,7 @@ public class EventsApi {
      * current timestamp. If the timestamp is negative: seconds since the
      * current timestamp. The stop time is optional. Entering only a start time
      * will give all events from that moment onwards.
-     * 
+     *
      * @param eventId
      *            the event id for which the data is requested.
      * @param start
@@ -135,7 +133,7 @@ public class EventsApi {
 
     /**
      * Get a single Data point by its id.
-     * 
+     *
      * @param eventId
      *            the event id.
      * @param dataId
@@ -144,14 +142,14 @@ public class EventsApi {
      * @throws IOException
      */
     public EventData getData(Long eventId, Long dataId) throws IOException {
-        return api.callWithAuth("GET", "/events/" + eventId + "/data/get/" + dataId + "/", null,
+        return api.callWithAuth("GET", "/events/" + eventId + "/data/get/" + dataId + '/', null,
                 new TypeReference<EventData>() {
                 });
     }
 
     /**
      * Create new EventData for a given event.
-     * 
+     *
      * @param eventId
      *            the event for which the data will ne inserted.
      * @param data
@@ -167,7 +165,7 @@ public class EventsApi {
 
     /**
      * Delete EventData.
-     * 
+     *
      * @param eventId
      *            the event id.
      * @param dataId
@@ -176,7 +174,7 @@ public class EventsApi {
      * @throws IOException
      */
     public Msg deleteData(Long eventId, Long dataId) throws IOException {
-        return api.callWithAuth("DELETE", "/events/" + eventId + "/data/" + dataId + "/", null,
+        return api.callWithAuth("DELETE", "/events/" + eventId + "/data/" + dataId + '/', null,
                 new TypeReference<Msg>() {
                 });
     }

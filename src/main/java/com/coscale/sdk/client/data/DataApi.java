@@ -35,7 +35,7 @@ public class DataApi {
      * @throws IOException
      */
     public Msg insert(String subjectId, DataInsert data) throws IOException {
-        return api.callWithAuth("POST", "/data/" + subjectId + "/", data, new TypeReference<Msg>() {
+        return api.callWithAuth("POST", "/data/" + subjectId + '/', data, new TypeReference<Msg>() {
         });
     }
 }

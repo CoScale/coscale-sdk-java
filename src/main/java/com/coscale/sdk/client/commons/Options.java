@@ -46,7 +46,7 @@ public class Options {
         }
     }
 
-    private Options(Builder builder) {
+    public Options(Builder builder) {
         selectBys = builder.selectBys;
         expands = builder.expands;
     }
@@ -71,5 +71,18 @@ public class Options {
         List<String> parts = selectByList();
         parts.addAll(expandList());
         return Joiner.on('&').join(parts);
+    }
+
+    /**
+     * If neither the selectBys or expands has entries, there are no options for the query.
+     * @return False if neither selectBys or expands has entries/is initialized.
+     * True if either one has entries.
+     */
+    public boolean hasQuery() {
+        if ((selectBys == null || selectBys.isEmpty()) && (expands == null || expands.isEmpty())) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

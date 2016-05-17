@@ -3,11 +3,11 @@ package com.coscale.sdk.client;
 /**
  * Credentials object will be used to login on CoScale API. There are 2 ways to
  * authenticate on CoScale API:
- * 
+ *
  * 1. Authenticating with an access token;
- * 
+ *
  * 2. Authenticating with your email and password.
- * 
+ *
  * @author cristi
  *
  */
@@ -15,7 +15,7 @@ public class Credentials {
 
     /**
      * Token is used for Authenticating with an access token.
-     * 
+     *
      * @param accessToken
      *            obtained from CoScale user account.
      * @return Credentials for authentication with an access token.
@@ -26,7 +26,7 @@ public class Credentials {
 
     /**
      * Authenticating with email and password.
-     * 
+     *
      * @param email
      *            CoScale user email address.
      * @param password
@@ -39,7 +39,7 @@ public class Credentials {
 
     /**
      * usesToken is used to determine which authentication method is used.
-     * 
+     *
      * @return boolean true if Token authentication is used.
      */
     public boolean usesToken() {
