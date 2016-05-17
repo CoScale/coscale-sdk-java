@@ -24,7 +24,7 @@ To use the client add the project declaration to your `pom.xml`:
 
 
 We are waiting for approval from the central maven repo for our SDK. 
-In the mean while you can download the jar from github [here] (https://github.com/CoScale/coscale-sdk-java/releases/tag/1.0.0) and add it manually to your project.
+In the mean while you can download the jar from [here] (https://github.com/CoScale/coscale-sdk-java/releases/tag/1.0.0) and add it manually to your project.
 
 ## Resources
 
