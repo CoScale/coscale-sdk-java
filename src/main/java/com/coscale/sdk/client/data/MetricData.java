@@ -20,10 +20,10 @@ public class MetricData<T extends MetricData.DataType> {
 
         /**
          * DataType constructor.
-         * 
+         *
          * @param timestamp
          */
-        DataType(Long timestamp) {
+        public DataType(Long timestamp) {
             this.timestamp = timestamp;
         }
 

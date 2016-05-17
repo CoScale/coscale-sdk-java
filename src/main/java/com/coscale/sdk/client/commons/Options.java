@@ -46,7 +46,7 @@ public class Options {
         }
     }
 
-    public Options(Builder builder) {
+    private Options(Builder builder) {
         selectBys = builder.selectBys;
         expands = builder.expands;
     }
