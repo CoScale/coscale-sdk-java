@@ -423,7 +423,7 @@ public class ApiClient {
         }
         sb.append(endpoint);
 
-        if (options != null) {
+        if (options != null && options.hasQuery()) {
             // No ? yet in the string, then add one.
             if (sb.indexOf("?") != -1) {
                 sb.append('?');
