@@ -72,4 +72,17 @@ public class Options {
         parts.addAll(expandList());
         return Joiner.on('&').join(parts);
     }
+
+    /**
+     * If neither the selectBys or expands has entries, there are no options for the query.
+     * @return False if neither selectBys or expands has entries/is initialized.
+     * True if either one has entries.
+     */
+    public boolean hasQuery() {
+        if ((selectBys == null || selectBys.isEmpty()) && (expands == null || expands.isEmpty())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

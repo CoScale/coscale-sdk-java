@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ServersApi is used to make API requests for servers endpoints.
- * 
+ *
  * @author cristi
  *
  */
@@ -21,7 +21,7 @@ public class ServersApi {
 
     /**
      * ServersApi constructor.
-     * 
+     *
      * @param api
      *            ApiClient.
      */
@@ -31,7 +31,7 @@ public class ServersApi {
 
     /**
      * Get all servers.
-     * 
+     *
      * @return List of all Servers.
      * @throws IOException
      */
@@ -42,7 +42,7 @@ public class ServersApi {
 
     /**
      * Get all servers.
-     * 
+     *
      * @param options
      *            which contain query parameters
      * @return List of all Servers.
@@ -50,30 +50,28 @@ public class ServersApi {
      */
     public List<Server> all(Options options) throws IOException {
         String url = "/servers/";
-        boolean first = true;
-        url += (first ? "?" : "&") + options.query();
-        first = false;
+        url += (options.hasQuery() ? "?" : "&") + options.query();
         return api.callWithAuth("GET", url, null, new TypeReference<List<Server>>() {
         });
     }
 
     /**
      * Get the a specific server by his id.
-     * 
+     *
      * @param serverId
      *            the id of the server.
      * @return Server.
      * @throws IOException
      */
     public Server getServer(long serverId) throws IOException {
-        return api.callWithAuth("GET", "/servers/" + serverId + "/", null,
+        return api.callWithAuth("GET", "/servers/" + serverId + '/', null,
                 new TypeReference<Server>() {
                 });
     }
 
     /**
      * Get the a specific server by his id.
-     * 
+     *
      * @param serverId
      *            the id of the server.
      * @param options
@@ -82,10 +80,8 @@ public class ServersApi {
      * @throws IOException
      */
     public Server getServer(long serverId, Options options) throws IOException {
-        String url = "/servers/" + serverId + "/";
-        boolean first = true;
-        url += (first ? "?" : "&") + options.query();
-        first = false;
+        String url = "/servers/" + serverId + '/';
+        url += (options.hasQuery() ? "?" : "&") + options.query();
         return api.callWithAuth("GET", url, null, new TypeReference<Server>() {
         });
     }
@@ -93,7 +89,7 @@ public class ServersApi {
     /**
      * Insert a new server. Optionally set which other server will be its
      * parent.
-     * 
+     *
      * @param serverInsert
      *            the server to be added.
      * @return Server.
@@ -106,14 +102,14 @@ public class ServersApi {
 
     /**
      * Delete a specific server.
-     * 
+     *
      * @param serverId
      *            the id of the server to be deleted.
      * @return Msg.
      * @throws IOException
      */
     public Msg delete(long serverId) throws IOException {
-        return api.callWithAuth("DELETE", "/servers/" + serverId + "/", null,
+        return api.callWithAuth("DELETE", "/servers/" + serverId + '/', null,
                 new TypeReference<Msg>() {
                 });
     }

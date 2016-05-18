@@ -1,7 +1,7 @@
 package com.coscale.sdk.client.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,7 +20,7 @@ public class MetricData<T extends MetricData.DataType> {
 
         /**
          * DataType constructor.
-         * 
+         *
          * @param timestamp
          */
         public DataType(Long timestamp) {
@@ -43,7 +43,7 @@ public class MetricData<T extends MetricData.DataType> {
 
     public MetricData(Long metricId, T data) {
         this.metricId = metricId;
-        this.data = new ArrayList<T>(Arrays.asList(data));
+        this.data = new ArrayList<T>(Collections.singletonList(data));
 
         this.type = data.getClass();
     }

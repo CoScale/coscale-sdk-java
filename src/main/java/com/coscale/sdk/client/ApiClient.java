@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * ApiClient is used to make HTTP requests to CoScale API client
- * 
+ *
  * @author cristi
  *
  */
@@ -75,7 +75,7 @@ public class ApiClient {
 
     /**
      * ApiClient Constructor.
-     * 
+     *
      * @param appId
      *            The CoScale Application id.
      * @param credentials
@@ -119,7 +119,7 @@ public class ApiClient {
 
     /**
      * setBaseURL is used to set a new API base URL. Is for Testing purpose.
-     * 
+     *
      * @param url
      */
     public void setBaseURL(String url) {
@@ -128,7 +128,7 @@ public class ApiClient {
 
     /**
      * return the default connection timeout in ms.
-     * 
+     *
      * @return
      */
     public int getConnectionTimeout() {
@@ -137,7 +137,7 @@ public class ApiClient {
 
     /**
      * Change the default connection timeout.
-     * 
+     *
      * @param timeout
      *            in ms.
      */
@@ -147,7 +147,7 @@ public class ApiClient {
 
     /**
      * return the default read timeout in ms.
-     * 
+     *
      * @return
      */
     public int getReadTimeout() {
@@ -156,7 +156,7 @@ public class ApiClient {
 
     /**
      * Change the default read timeout.
-     * 
+     *
      * @param timeout
      *            in ms.
      */
@@ -166,7 +166,7 @@ public class ApiClient {
 
     /**
      * Get the SOURCE String which mark the created resources.
-     * 
+     *
      * @return
      */
     public static String getSource() {
@@ -175,7 +175,7 @@ public class ApiClient {
 
     /**
      * Set the Source String which mark the created resources.
-     * 
+     *
      * @param source
      */
     public void setSource(String source) {
@@ -185,7 +185,7 @@ public class ApiClient {
     /**
      * getDeserializationExceptions is used to get the number of JSON
      * deserialization errors.
-     * 
+     *
      * @return integer representing the number of JSON deserialization errors.
      */
     public int getDeserializationExceptions() {
@@ -281,7 +281,7 @@ public class ApiClient {
     /**
      * login will get the token used to authenticate the requests on CoScale
      * API.
-     * 
+     *
      * @throws IOException
      */
     private void login() throws IOException {
@@ -297,11 +297,11 @@ public class ApiClient {
     /**
      * callWithAuth is used to make requests that require Authentication on
      * CoScale API.
-     * 
+     *
      * @param method
      *            request HTTP method.
-     * @param url
-     *            for the request.
+     * @param endpoint
+     *            The url for the request.
      * @param obj
      *            object with data for the request. This parameter can be null.
      * @param valueType
@@ -319,7 +319,7 @@ public class ApiClient {
         // Do the actual request.
         int tries = 0;
         int responseCode = 0;
-        while (tries++ <= AUTH_RETRIES) {
+        do {
             if (this.token == null) {
                 login();
             }
@@ -332,8 +332,10 @@ public class ApiClient {
                     throw e;
                 }
             }
-        }
-        throw new CoscaleApiException(responseCode, "Failed to get authentication right");
+
+            tries++;
+        } while (tries <= AUTH_RETRIES);
+        throw new CoscaleApiException(responseCode, "Authentication failed.");
     }
 
     /**
@@ -371,7 +373,7 @@ public class ApiClient {
      * getAppRequestURL will construct the URL for a request using the end point
      * provided. This method will be used to construct the URL for a specific
      * application since the resulted URL will contain the application Id.
-     * 
+     *
      * @param endpoint
      *            String representing the API end point of the request.
      * @return String containing the URL.
@@ -384,7 +386,7 @@ public class ApiClient {
      * getGlobalRequestURL will construct the URL for a request using the end
      * point provided. This will generate a URL for requests that doesn't
      * contain the application Id. Should be used for example in login process.
-     * 
+     *
      * @param endpoint
      *            String representing the API end point of the request.
      * @return String containing the URL.
@@ -421,7 +423,12 @@ public class ApiClient {
         }
         sb.append(endpoint);
 
-        if (options != null) {
+        if (options != null && options.hasQuery()) {
+            // No ? yet in the string, then add one.
+            if (sb.indexOf("?") != -1) {
+                sb.append('?');
+            }
+
             sb.append(options.query());
         }
 
@@ -440,11 +447,21 @@ public class ApiClient {
         if (is == null) {
             return "";
         }
-        try {
-            return new java.util.Scanner(is).useDelimiter("\\A").next();
+
+        String result = null;
+        // Try-with-resources closes any object that implements the Closeable interface.
+        try (java.util.Scanner scanner = new java.util.Scanner(is).useDelimiter("\\A")) {
+            result = scanner.next();
         } catch (java.util.NoSuchElementException e) {
             return "";
         }
+
+        /**
+         * The useDelimiter method returns the very same instance that was used for the call.
+         * While the compiler will warn that there is a possible memory leak, that can only
+         * happen if it would return an other instance, leaving the original hanging.
+         */
+        return result;
     }
 
     /**

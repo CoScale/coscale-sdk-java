@@ -1,7 +1,5 @@
 package com.coscale.sdk.client;
 
-import com.coscale.sdk.client.ApiClient;
-import com.coscale.sdk.client.Credentials;
 import com.coscale.sdk.client.data.DataApi;
 import com.coscale.sdk.client.events.EventsApi;
 import com.coscale.sdk.client.metrics.MetricsApi;
@@ -9,7 +7,7 @@ import com.coscale.sdk.client.servers.ServersApi;
 
 /**
  * ApiFactory is used to instantiate CoScale API Clients.
- * 
+ *
  * @author cristi
  *
  */
@@ -20,7 +18,7 @@ public class ApiFactory {
 
     /**
      * ApiFactory Constructor.
-     * 
+     *
      * @param appId
      *            the CoScale application id.
      * @param credentials
@@ -32,7 +30,7 @@ public class ApiFactory {
 
     /**
      * Get the Api Client.
-     * 
+     *
      * @return ApiClient.
      */
     public ApiClient getApiClient() {
@@ -41,7 +39,7 @@ public class ApiFactory {
 
     /**
      * Get a instance of MetricsApi.
-     * 
+     *
      * @return MetricsApi.
      */
     public MetricsApi getMetricsApi() {
@@ -50,7 +48,7 @@ public class ApiFactory {
 
     /**
      * Get a instance of EventsApi.
-     * 
+     *
      * @return EventsApi.
      */
     public EventsApi getEventsApi() {
@@ -59,7 +57,7 @@ public class ApiFactory {
 
     /**
      * Get a instance of ServersApi.
-     * 
+     *
      * @return ServersApi.
      */
     public ServersApi getServersApi() {
@@ -68,7 +66,7 @@ public class ApiFactory {
 
     /**
      * Get a instance of DataApi.
-     * 
+     *
      * @return DataApi.
      */
     public DataApi getDataApi() {

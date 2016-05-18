@@ -49,9 +49,7 @@ public class MetricsApi {
      */
     public List<Metric> all(Options options) throws IOException {
         String url = "/metrics/";
-        boolean first = true;
-        url += (first ? "?" : "&") + options.query();
-        first = false;
+        url += (options.hasQuery() ? "?" : "&") + options.query();
         return api.callWithAuth("GET", url, null, new TypeReference<List<Metric>>() {
         });
     }
@@ -65,7 +63,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public Metric get(long id) throws IOException {
-        return api.callWithAuth("GET", "/metrics/" + id + "/", null, new TypeReference<Metric>() {
+        return api.callWithAuth("GET", "/metrics/" + id + '/', null, new TypeReference<Metric>() {
         });
     }
 
@@ -91,7 +89,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public Msg delete(long id) throws IOException {
-        return api.callWithAuth("DELETE", "/metrics/" + id + "/", null, new TypeReference<Msg>() {
+        return api.callWithAuth("DELETE", "/metrics/" + id + '/', null, new TypeReference<Msg>() {
         });
     }
 
@@ -118,7 +116,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public MetricGroup getMetricGroup(long id) throws IOException {
-        return api.callWithAuth("GET", "/metricgroups/" + id + "/", null,
+        return api.callWithAuth("GET", "/metricgroups/" + id + '/', null,
                 new TypeReference<MetricGroup>() {
                 });
     }
@@ -147,7 +145,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public Msg deleteMetricGroup(long id) throws IOException {
-        return api.callWithAuth("DELETE", "/metricgroups/", null, new TypeReference<Msg>() {
+        return api.callWithAuth("DELETE", "/metricgroups/" + id + '/', null, new TypeReference<Msg>() {
         });
     }
 
@@ -161,7 +159,7 @@ public class MetricsApi {
      */
     public MetricGroup addGroupToGroup(long childId, long parentId) throws IOException {
         return api.callWithAuth("POST", "/metricgroups/" + parentId + "/metricgroups/" + childId
-                + "/", null, new TypeReference<MetricGroup>() {
+                + '/', null, new TypeReference<MetricGroup>() {
         });
     }
 
@@ -174,7 +172,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public Metric addMetricToGroup(long metricId, long groupId) throws IOException {
-        return api.callWithAuth("POST", "/metricgroups/" + groupId + "/metrics/" + metricId + "/",
+        return api.callWithAuth("POST", "/metricgroups/" + groupId + "/metrics/" + metricId + '/',
                 null, new TypeReference<Metric>() {
                 });
     }
@@ -205,7 +203,7 @@ public class MetricsApi {
      */
     public Msg deleteMetricFromGroup(long metricId, long groupId) throws IOException {
         return api.callWithAuth("DELETE",
-                "/metricgroups/" + groupId + "/metrics/" + metricId + "/", null,
+                "/metricgroups/" + groupId + "/metrics/" + metricId + '/', null,
                 new TypeReference<Msg>() {
                 });
     }
@@ -237,7 +235,7 @@ public class MetricsApi {
      */
     public Msg deleteGroupFromGroup(long childId, long parentId) throws IOException {
         return api.callWithAuth("DELETE", "/metricgroups/" + parentId + "/metricgroups/" + childId
-                + "/", null, new TypeReference<Msg>() {
+                + '/', null, new TypeReference<Msg>() {
         });
     }
 }
