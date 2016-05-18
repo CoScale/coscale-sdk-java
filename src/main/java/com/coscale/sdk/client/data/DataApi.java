@@ -31,7 +31,7 @@ public class DataApi {
      * Insert data into the data-store
      * 
      * @param data
-     * @return
+     * @return Msg containing the api response.
      * @throws IOException
      */
     public Msg insert(String subjectId, DataInsert data) throws IOException {

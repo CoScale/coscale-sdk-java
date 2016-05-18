@@ -52,7 +52,7 @@ public class DataInsertBuilder {
      * 
      * @param tClass
      * @param metricId
-     * @return
+     * @return MetricData<T>.
      */
     @SuppressWarnings("unchecked")
     private <T extends MetricData.DataType> MetricData<T> getData(Class<T> tClass, long metricId) {

@@ -129,7 +129,7 @@ public class ApiClient {
     /**
      * return the default connection timeout in ms.
      *
-     * @return
+     * @return int connection timeout value.
      */
     public int getConnectionTimeout() {
         return API_CONN_TIMEOUT_MS;
@@ -148,7 +148,7 @@ public class ApiClient {
     /**
      * return the default read timeout in ms.
      *
-     * @return
+     * @return int read timeout value.
      */
     public int getReadTimeout() {
         return API_READ_TIMEOUT_MS;
@@ -167,7 +167,7 @@ public class ApiClient {
     /**
      * Get the SOURCE String which mark the created resources.
      *
-     * @return
+     * @return String source value.
      */
     public static String getSource() {
         return SOURCE;
@@ -201,7 +201,7 @@ public class ApiClient {
      *            of the API call.
      * @param data
      *            in string format to pass to the request.
-     * @return
+     * @return String response for the request.
      * @throws IOException
      */
     private String doHttpRequest(String method, String uri, String payload, boolean authenticate)
@@ -405,7 +405,7 @@ public class ApiClient {
      *            Optional query parameters
      * @param globalApi
      *            if is set true, application Id will not be include into URL.
-     * @return
+     * @return String generated request url.
      */
     public String getRequesUrl(String endpoint, Options options, boolean globalApi) {
 

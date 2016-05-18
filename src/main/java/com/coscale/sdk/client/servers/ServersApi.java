@@ -76,7 +76,7 @@ public class ServersApi {
      *            the id of the server.
      * @param options
      *            which contain query parameters
-     * @return
+     * @return Server.
      * @throws IOException
      */
     public Server getServer(long serverId, Options options) throws IOException {
