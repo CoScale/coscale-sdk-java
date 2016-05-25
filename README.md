@@ -16,7 +16,7 @@ Java bindings for the [CoScale API](http://docs.coscale.com/)
 
 ## Installation
 
-You can download the jar binary from [here] (https://github.com/CoScale/coscale-sdk-java/releases/tag/1.0.0).
+You can download the jar binary from [here] (https://github.com/CoScale/coscale-sdk-java/releases).
 
 ### maven
 
@@ -26,7 +26,7 @@ To use the client add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>com.coscale.sdk-java</groupId>
   <artifactId>coscale-sdk-java</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
