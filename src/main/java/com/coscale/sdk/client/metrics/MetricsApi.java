@@ -44,6 +44,8 @@ public class MetricsApi {
     /**
      * all is used to get a list of all metrics.
      * 
+     * @param options
+     *            filter the Metrics. e.g. filter by metric name.
      * @return List<Metric>
      * @throws IOException
      */
@@ -108,10 +110,26 @@ public class MetricsApi {
     }
 
     /**
+     * Get all metric groups.
+     * 
+     * @param options
+     *            filter the MetricGroups. e.g. filter by metric name.
+     * 
+     * @return List of all MetricGroups
+     * @throws IOException
+     */
+    public List<MetricGroup> getAllMetricGroups(Options options) throws IOException {
+        String url = "/metricgroups/";
+        url += (options.hasQuery() ? "?" : "&") + options.query();
+        return api.callWithAuth("GET", url, null, new TypeReference<List<MetricGroup>>() {
+        });
+    }
+
+    /**
      * Get a specific metric group.
      * 
      * @param id
-     *            the id of the metric group
+     *            the id of the metric group.
      * @return MetricGroup
      * @throws IOException
      */
@@ -145,8 +163,9 @@ public class MetricsApi {
      * @throws IOException
      */
     public Msg deleteMetricGroup(long id) throws IOException {
-        return api.callWithAuth("DELETE", "/metricgroups/" + id + '/', null, new TypeReference<Msg>() {
-        });
+        return api.callWithAuth("DELETE", "/metricgroups/" + id + '/', null,
+                new TypeReference<Msg>() {
+                });
     }
 
     /**
@@ -154,12 +173,12 @@ public class MetricsApi {
      * 
      * @param childId
      * @param parentId
-     * @return MetricGroup: the added metric group.
+     * @return List of groups contained by the parent group.
      * @throws IOException
      */
-    public MetricGroup addGroupToGroup(long childId, long parentId) throws IOException {
+    public List<MetricGroup> addGroupToGroup(long childId, long parentId) throws IOException {
         return api.callWithAuth("POST", "/metricgroups/" + parentId + "/metricgroups/" + childId
-                + '/', null, new TypeReference<MetricGroup>() {
+                + '/', null, new TypeReference<List<MetricGroup>>() {
         });
     }
 
@@ -168,12 +187,12 @@ public class MetricsApi {
      * 
      * @param metricId
      * @param groupId
-     * @return Metric: the inserted metric.
+     * @return List of Metrics contained by the group.
      * @throws IOException
      */
-    public Metric addMetricToGroup(long metricId, long groupId) throws IOException {
+    public List<Metric> addMetricToGroup(long metricId, long groupId) throws IOException {
         return api.callWithAuth("POST", "/metricgroups/" + groupId + "/metrics/" + metricId + '/',
-                null, new TypeReference<Metric>() {
+                null, new TypeReference<List<Metric>>() {
                 });
     }
 

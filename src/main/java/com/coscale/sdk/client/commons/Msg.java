@@ -2,7 +2,6 @@ package com.coscale.sdk.client.commons;
 
 import javax.annotation.Nullable;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
@@ -10,7 +9,6 @@ import com.google.common.base.Objects;
  * Msg is used to parse request responses that return a Status Message.
  *
  */
-@JsonIgnoreProperties({ "measurements" })
 public class Msg {
 
     @Nullable

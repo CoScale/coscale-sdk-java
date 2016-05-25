@@ -1,6 +1,7 @@
 package com.coscale.sdk.client.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MapperSupport {
@@ -19,6 +20,9 @@ public class MapperSupport {
 
         private static ObjectMapper configure(ObjectMapper mapper) {
             mapper.setSerializationInclusion(Include.NON_NULL);
+            
+            // Ignore Unknown fiels.
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper;
         }
     }

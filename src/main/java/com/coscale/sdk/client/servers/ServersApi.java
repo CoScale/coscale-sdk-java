@@ -113,4 +113,167 @@ public class ServersApi {
                 new TypeReference<Msg>() {
                 });
     }
+
+    /** Server groups Calls */
+
+    /**
+     * Get all server groups.
+     * 
+     * @return List of all ServerGroups
+     * @throws IOException
+     */
+    public List<ServerGroup> getAllServerGroups() throws IOException {
+        return api.callWithAuth("GET", "/servergroups/", null,
+                new TypeReference<List<ServerGroup>>() {
+                });
+    }
+
+    /**
+     * Get all server groups.
+     * 
+     * @param options
+     *            filter the ServerGroups. e.g. filter by server name.
+     * 
+     * @return List of all ServerGroups
+     * @throws IOException
+     */
+    public List<ServerGroup> getAllServerGroups(Options options) throws IOException {
+        String url = "/servergroups/";
+        url += (options.hasQuery() ? "?" : "&") + options.query();
+        return api.callWithAuth("GET", url, null, new TypeReference<List<ServerGroup>>() {
+        });
+    }
+
+    /**
+     * Get a specific server group.
+     * 
+     * @param id
+     *            the id of the server group.
+     * @return ServerGroup
+     * @throws IOException
+     */
+    public ServerGroup getServerGroup(long id) throws IOException {
+        return api.callWithAuth("GET", "/servergroups/" + id + '/', null,
+                new TypeReference<ServerGroup>() {
+                });
+    }
+
+    /**
+     * Insert a new server group. Optionally set which ServerGroup will be its
+     * parent (this is set in ServerGroupInsert object).
+     * 
+     * @param serverGroup
+     *            the server group to insert.
+     * @return ServerGroup
+     * @throws IOException
+     */
+    public ServerGroup insertServerGroup(ServerGroupInsert serverGroup) throws IOException {
+        return api.callWithAuth("POST", "/servergroups/", serverGroup,
+                new TypeReference<ServerGroup>() {
+                });
+    }
+
+    /**
+     * Delete a specific server group.
+     * 
+     * @param id
+     *            the id of the server group.
+     * @return Msg
+     * @throws IOException
+     */
+    public Msg deleteServerGroup(long id) throws IOException {
+        return api.callWithAuth("DELETE", "/servergroups/" + id + '/', null,
+                new TypeReference<Msg>() {
+                });
+    }
+
+    /**
+     * Add an existing server group to another server group.
+     * 
+     * @param childId
+     * @param parentId
+     * @return List of groups contained by the parent group.
+     * @throws IOException
+     */
+    public List<ServerGroup> addGroupToGroup(long childId, long parentId) throws IOException {
+        return api.callWithAuth("POST", "/servergroups/" + parentId + "/servergroups/" + childId
+                + '/', null, new TypeReference<List<ServerGroup>>() {
+        });
+    }
+
+    /**
+     * Add an existing server to a server group.
+     * 
+     * @param serverId
+     * @param groupId
+     * @return List of Server contained by the group.
+     * @throws IOException
+     */
+    public List<Server> addServerToGroup(long serverId, long groupId) throws IOException {
+        return api.callWithAuth("POST", "/servergroups/" + groupId + "/servers/" + serverId + '/',
+                null, new TypeReference<List<Server>>() {
+                });
+    }
+
+    /**
+     * * Get all servers in the server group.
+     * 
+     * @param groupId
+     *            the id of the server group.
+     * @return List of Server.
+     * @throws IOException
+     */
+    public List<Server> getGroupServers(long groupId) throws IOException {
+        return api.callWithAuth("GET", "/servergroups/" + groupId + "/servers/", null,
+                new TypeReference<List<Server>>() {
+                });
+    }
+
+    /**
+     * Delete a server from a server group.
+     * 
+     * @param serverId
+     *            the id of the server.
+     * @param groupId
+     *            the id of the group.
+     * @return Msg.
+     * @throws IOException
+     */
+    public Msg deleteServerFromGroup(long serverId, long groupId) throws IOException {
+        return api.callWithAuth("DELETE",
+                "/servergroups/" + groupId + "/servers/" + serverId + '/', null,
+                new TypeReference<Msg>() {
+                });
+    }
+
+    /**
+     * Get all child server groups for a server group.
+     * 
+     * @param groupId
+     *            the if of the group.
+     * @return List of ServerGroup.
+     * @throws IOException
+     */
+    public List<ServerGroup> getGroupsFromGroup(long groupId) throws IOException {
+        return api.callWithAuth("GET", "/servergroups/" + groupId + "/servergroups/", null,
+                new TypeReference<List<ServerGroup>>() {
+                });
+    }
+
+    /**
+     * Delete a server group from another server group.
+     * 
+     * @param childId
+     *            the id of the group that will be removed.
+     * @param parentId
+     *            the id of the group from which the child group will be
+     *            removed.
+     * @return Msg.
+     * @throws IOException
+     */
+    public Msg deleteGroupFromGroup(long childId, long parentId) throws IOException {
+        return api.callWithAuth("DELETE", "/servergroups/" + parentId + "/servergroups/" + childId
+                + '/', null, new TypeReference<Msg>() {
+        });
+    }
 }
