@@ -26,7 +26,7 @@ To use the client add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>com.coscale.sdk-java</groupId>
   <artifactId>coscale-sdk-java</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -38,6 +38,7 @@ Resources this API supports:
 - [Data](#data)
 - [Servers](#servers)
 - [Events](#events)
+- [Requests](#requests)
 
 
 ## Authentication
@@ -129,6 +130,12 @@ Server server = apiFactory.getServersApi().insert(serverInsert);
 // To get a server by the name we can add a filter.
 Options filter = new Builder().selectBy("name", "Ubuntu Server").build();
 apiFactory.getServersApi().all(filter);
+
+// Get the server attributes.
+Options options = new Options.Builder().expand("attributes").build();
+Server server = serversApi.getServer(server.id, options);
+// or
+List<Server> servers = serversApi.all(options);
 ```
 
 ### Events
@@ -152,6 +159,20 @@ EventData eventData = eventsApi.getData(event.id, eventData.id);
 
 // Delete data for a event by ids.
 Msg msg = eventsApi.deleteData(event.id, eventData.id);
+```
+
+### Requests
+
+```java
+// Get a request by id.
+Request request = requestsApi.get(request.id);
+
+// Get all Requests.
+List<Request> requests = requestsApi.all();
+
+// Get all Requests and filter by attributes.
+Options options = new Options.Builder().selectBy("name", "example.coscale.com").build();
+List<Request> requests = requestsApi.all(options);
 ```
 
 ## Subject
