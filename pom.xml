@@ -5,7 +5,7 @@
 
   <groupId>com.coscale.sdk-java</groupId>
   <artifactId>coscale-sdk-java</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
   <name>CoScale SDK</name>
   <description>Java SDK for integrating apps with CoScale Web Performance Monitoring platform.</description>
