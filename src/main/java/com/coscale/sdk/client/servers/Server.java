@@ -1,5 +1,7 @@
 package com.coscale.sdk.client.servers;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import com.coscale.sdk.client.metrics.Metric;
@@ -16,7 +18,7 @@ public class Server {
     public String source;
 
     @Nullable
-    public java.util.List<Metric> metrics;
+    public List<Metric> metrics;
 
     @Nullable
     public String description;
@@ -27,7 +29,7 @@ public class Server {
     public State state;
 
     @Nullable
-    public java.util.List<Server> children;
+    public List<Server> children;
 
     @Nullable
     public String type;
@@ -35,12 +37,16 @@ public class Server {
     @Nullable
     public Long version;
 
+    @Nullable
+    public List<ServerAttribute> attributes;
+
     public Server(State state) {
         this.state = state;
     }
 
-    public Server(Long id, String source, java.util.List<Metric> metrics, String description,
-            String name, State state, java.util.List<Server> children, String type, Long version) {
+    public Server(Long id, String source, List<Metric> metrics, String description, String name,
+            State state, List<Server> children, String type, Long version,
+            List<ServerAttribute> attributes) {
         this.id = id;
         this.source = source;
         this.metrics = metrics;
@@ -50,6 +56,7 @@ public class Server {
         this.children = children;
         this.type = type;
         this.version = version;
+        this.attributes = attributes;
     }
 
     public Server() {
@@ -60,7 +67,7 @@ public class Server {
         return MoreObjects.toStringHelper(this).add("id", id).add("source", source)
                 .add("metrics", metrics).add("description", description).add("name", name)
                 .add("state", state).add("children", children).add("type", type)
-                .add("version", version).toString();
+                .add("version", version).add("attributes", attributes).toString();
     }
 
     @Override
@@ -79,13 +86,14 @@ public class Server {
                 && Objects.equal(this.name, other.name) && Objects.equal(this.state, other.state)
                 && Objects.equal(this.children, other.children)
                 && Objects.equal(this.type, other.type)
-                && Objects.equal(this.version, other.version);
+                && Objects.equal(this.version, other.version)
+                && Objects.equal(this.attributes, other.attributes);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(id, source, metrics, description, name, state, children, type,
-                version);
+                version, attributes);
     }
 
 }
