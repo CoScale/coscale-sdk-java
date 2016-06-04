@@ -1,9 +1,9 @@
 package com.coscale.sdk.client;
 
-import com.coscale.client.requests.RequestsApi;
 import com.coscale.sdk.client.data.DataApi;
 import com.coscale.sdk.client.events.EventsApi;
 import com.coscale.sdk.client.metrics.MetricsApi;
+import com.coscale.sdk.client.requests.RequestsApi;
 import com.coscale.sdk.client.servers.ServersApi;
 
 /**

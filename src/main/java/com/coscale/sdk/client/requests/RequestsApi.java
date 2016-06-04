@@ -1,4 +1,4 @@
-package com.coscale.client.requests;
+package com.coscale.sdk.client.requests;
 
 import java.io.IOException;
 import java.util.List;
