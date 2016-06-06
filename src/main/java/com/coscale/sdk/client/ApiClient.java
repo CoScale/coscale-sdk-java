@@ -29,7 +29,7 @@ public class ApiClient {
     private final String APPID;
 
     /** API_PATH, API_VERSION for request URL. */
-    private final String API_PATH = "api";
+    private static final String API_PATH = "api";
     private String API_VERSION = "v1";
 
     /** URL path separator */
@@ -199,19 +199,20 @@ public class ApiClient {
      *            used by request.
      * @param uri
      *            of the API call.
-     * @param data
-     *            in string format to pass to the request.
+     * @param payload
+     *            data in string format to pass to the request.
+     * @param authenticate
+     *            True if the call requires authenticate, false if not.
      * @return String response for the request.
      * @throws IOException
      */
     private String doHttpRequest(String method, String uri, String payload, boolean authenticate)
             throws IOException {
-        URL url;
         HttpURLConnection conn = null;
         int responseCode = -1;
 
         try {
-            url = new URL(uri);
+            URL url = new URL(uri);
             conn = (HttpURLConnection) url.openConnection();
 
             // Set connection timeout.
@@ -288,8 +289,7 @@ public class ApiClient {
         String uri = credentials.usesToken() ? getAppRequestURL("/login/")
                 : getGlobalRequestURL("/users/login/");
         Credentials.TokenHelper data = call("POST", uri, credentials,
-                new TypeReference<Credentials.TokenHelper>() {
-                }, false);
+                new TokenHelperTypeReference(), false);
 
         token = data.token;
     }
@@ -328,6 +328,7 @@ public class ApiClient {
             } catch (CoscaleApiException e) {
                 if (e.statusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
                     this.token = null; // will trigger new login
+                    responseCode = 401; // 401 means login failed: https://httpstatuses.com/401
                 } else {
                     throw e;
                 }
@@ -349,6 +350,8 @@ public class ApiClient {
      *            object with data for the request. This parameter can be null.
      * @param valueType
      *            is the type expected.
+     * @param auth
+     *            true if the call requires authentication, false if not.
      * @return The Object received as a result for the request.
      * @throws IOException
      */
@@ -410,11 +413,11 @@ public class ApiClient {
     public String getRequesUrl(String endpoint, Options options, boolean globalApi) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(getBaseURL());
+        sb.append(API_BASE_URL);
         sb.append(PATH_DIV);
-        sb.append(getApiPath());
+        sb.append(API_PATH);
         sb.append(PATH_DIV);
-        sb.append(getApiVersion());
+        sb.append(API_VERSION);
         if (!globalApi) {
             sb.append(PATH_DIV);
             sb.append("app");
@@ -485,5 +488,13 @@ public class ApiClient {
                 throw e;
             }
         }
+    }
+
+    /**
+     * Copied from the Intellij code analysis:
+     * A static inner class does not keep an implicit reference to its enclosing instance.
+     * This prevents a common cause of memory leaks and uses less memory per instance of the class.
+     */
+    private static class TokenHelperTypeReference extends TypeReference<Credentials.TokenHelper> {
     }
 }

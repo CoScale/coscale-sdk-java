@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 public class MetricGroup {
 
@@ -48,13 +49,13 @@ public class MetricGroup {
             java.util.List<Long> metricIds, String type, Long version) {
         this.id = id;
         this.source = source;
-        this.metrics = metrics;
+        this.metrics = Lists.newArrayList(metrics); // Copy the contents, don't keep reference.
         this.subject = subject;
         this.description = description;
         this.name = name;
         this.state = state;
-        this.metricgroups = metricgroups;
-        this.metricIds = metricIds;
+        this.metricgroups = Lists.newArrayList(metricgroups);
+        this.metricIds = Lists.newArrayList(metricIds);
         this.type = type;
         this.version = version;
     }

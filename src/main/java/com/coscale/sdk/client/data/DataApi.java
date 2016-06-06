@@ -35,7 +35,14 @@ public class DataApi {
      * @throws IOException
      */
     public Msg insert(String subjectId, DataInsert data) throws IOException {
-        return api.callWithAuth("POST", "/data/" + subjectId + '/', data, new TypeReference<Msg>() {
-        });
+        return api.callWithAuth("POST", "/data/" + subjectId + '/', data, new MsgTypeReference());
+    }
+
+    /**
+     * Copied from the Intellij code analysis:
+     * A static inner class does not keep an implicit reference to its enclosing instance.
+     * This prevents a common cause of memory leaks and uses less memory per instance of the class.
+     */
+    private static class MsgTypeReference extends TypeReference<Msg> {
     }
 }

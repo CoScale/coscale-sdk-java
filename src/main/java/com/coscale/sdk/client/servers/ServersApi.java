@@ -36,8 +36,7 @@ public class ServersApi {
      * @throws IOException
      */
     public List<Server> all() throws IOException {
-        return api.callWithAuth("GET", "/servers/", null, new TypeReference<List<Server>>() {
-        });
+        return api.callWithAuth("GET", "/servers/", null, new ServerListTypeReference());
     }
 
     /**
@@ -51,8 +50,7 @@ public class ServersApi {
     public List<Server> all(Options options) throws IOException {
         String url = "/servers/";
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<List<Server>>() {
-        });
+        return api.callWithAuth("GET", url, null, new ServerListTypeReference());
     }
 
     /**
@@ -65,8 +63,7 @@ public class ServersApi {
      */
     public Server getServer(long serverId) throws IOException {
         return api.callWithAuth("GET", "/servers/" + serverId + '/', null,
-                new TypeReference<Server>() {
-                });
+                new ServerTypeReference());
     }
 
     /**
@@ -82,8 +79,7 @@ public class ServersApi {
     public Server getServer(long serverId, Options options) throws IOException {
         String url = "/servers/" + serverId + '/';
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<Server>() {
-        });
+        return api.callWithAuth("GET", url, null, new ServerTypeReference());
     }
 
     /**
@@ -96,8 +92,7 @@ public class ServersApi {
      * @throws IOException
      */
     public Server insert(ServerInsert serverInsert) throws IOException {
-        return api.callWithAuth("POST", "/servers/", serverInsert, new TypeReference<Server>() {
-        });
+        return api.callWithAuth("POST", "/servers/", serverInsert, new ServerTypeReference());
     }
 
     /**
@@ -110,8 +105,7 @@ public class ServersApi {
      */
     public Msg delete(long serverId) throws IOException {
         return api.callWithAuth("DELETE", "/servers/" + serverId + '/', null,
-                new TypeReference<Msg>() {
-                });
+                new MsgTypeReference());
     }
 
     /** Server groups Calls */
@@ -123,9 +117,7 @@ public class ServersApi {
      * @throws IOException
      */
     public List<ServerGroup> getAllServerGroups() throws IOException {
-        return api.callWithAuth("GET", "/servergroups/", null,
-                new TypeReference<List<ServerGroup>>() {
-                });
+        return api.callWithAuth("GET", "/servergroups/", null, new ServerGroupListTypeReference());
     }
 
     /**
@@ -140,8 +132,7 @@ public class ServersApi {
     public List<ServerGroup> getAllServerGroups(Options options) throws IOException {
         String url = "/servergroups/";
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<List<ServerGroup>>() {
-        });
+        return api.callWithAuth("GET", url, null, new ServerGroupListTypeReference());
     }
 
     /**
@@ -154,8 +145,7 @@ public class ServersApi {
      */
     public ServerGroup getServerGroup(long id) throws IOException {
         return api.callWithAuth("GET", "/servergroups/" + id + '/', null,
-                new TypeReference<ServerGroup>() {
-                });
+                new ServerGroupTypeReference());
     }
 
     /**
@@ -169,8 +159,7 @@ public class ServersApi {
      */
     public ServerGroup insertServerGroup(ServerGroupInsert serverGroup) throws IOException {
         return api.callWithAuth("POST", "/servergroups/", serverGroup,
-                new TypeReference<ServerGroup>() {
-                });
+                new ServerGroupTypeReference());
     }
 
     /**
@@ -183,8 +172,7 @@ public class ServersApi {
      */
     public Msg deleteServerGroup(long id) throws IOException {
         return api.callWithAuth("DELETE", "/servergroups/" + id + '/', null,
-                new TypeReference<Msg>() {
-                });
+                new MsgTypeReference());
     }
 
     /**
@@ -197,8 +185,7 @@ public class ServersApi {
      */
     public List<ServerGroup> addGroupToGroup(long childId, long parentId) throws IOException {
         return api.callWithAuth("POST", "/servergroups/" + parentId + "/servergroups/" + childId
-                + '/', null, new TypeReference<List<ServerGroup>>() {
-        });
+                + '/', null, new ServerGroupListTypeReference());
     }
 
     /**
@@ -211,8 +198,7 @@ public class ServersApi {
      */
     public List<Server> addServerToGroup(long serverId, long groupId) throws IOException {
         return api.callWithAuth("POST", "/servergroups/" + groupId + "/servers/" + serverId + '/',
-                null, new TypeReference<List<Server>>() {
-                });
+                null, new ServerListTypeReference());
     }
 
     /**
@@ -225,8 +211,7 @@ public class ServersApi {
      */
     public List<Server> getGroupServers(long groupId) throws IOException {
         return api.callWithAuth("GET", "/servergroups/" + groupId + "/servers/", null,
-                new TypeReference<List<Server>>() {
-                });
+                new ServerListTypeReference());
     }
 
     /**
@@ -242,8 +227,7 @@ public class ServersApi {
     public Msg deleteServerFromGroup(long serverId, long groupId) throws IOException {
         return api.callWithAuth("DELETE",
                 "/servergroups/" + groupId + "/servers/" + serverId + '/', null,
-                new TypeReference<Msg>() {
-                });
+                new MsgTypeReference());
     }
 
     /**
@@ -256,8 +240,7 @@ public class ServersApi {
      */
     public List<ServerGroup> getGroupsFromGroup(long groupId) throws IOException {
         return api.callWithAuth("GET", "/servergroups/" + groupId + "/servergroups/", null,
-                new TypeReference<List<ServerGroup>>() {
-                });
+                new ServerGroupListTypeReference());
     }
 
     /**
@@ -273,7 +256,26 @@ public class ServersApi {
      */
     public Msg deleteGroupFromGroup(long childId, long parentId) throws IOException {
         return api.callWithAuth("DELETE", "/servergroups/" + parentId + "/servergroups/" + childId
-                + '/', null, new TypeReference<Msg>() {
-        });
+                + '/', null, new MsgTypeReference());
+    }
+
+    /**
+     * Copied from the Intellij code analysis:
+     * A static inner class does not keep an implicit reference to its enclosing instance.
+     * This prevents a common cause of memory leaks and uses less memory per instance of the class.
+     */
+    private static class ServerListTypeReference extends TypeReference<List<Server>> {
+    }
+
+    private static class ServerGroupListTypeReference extends TypeReference<List<ServerGroup>> {
+    }
+
+    private static class ServerTypeReference extends TypeReference<Server> {
+    }
+
+    private static class ServerGroupTypeReference extends TypeReference<ServerGroup> {
+    }
+
+    private static class MsgTypeReference extends TypeReference<Msg> {
     }
 }

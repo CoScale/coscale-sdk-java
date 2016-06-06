@@ -37,8 +37,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public List<Metric> all() throws IOException {
-        return api.callWithAuth("GET", "/metrics/", null, new TypeReference<List<Metric>>() {
-        });
+        return api.callWithAuth("GET", "/metrics/", null, new MetricListTypeReference());
     }
 
     /**
@@ -52,8 +51,7 @@ public class MetricsApi {
     public List<Metric> all(Options options) throws IOException {
         String url = "/metrics/";
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<List<Metric>>() {
-        });
+        return api.callWithAuth("GET", url, null, new MetricListTypeReference());
     }
 
     /**
@@ -65,8 +63,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public Metric get(long id) throws IOException {
-        return api.callWithAuth("GET", "/metrics/" + id + '/', null, new TypeReference<Metric>() {
-        });
+        return api.callWithAuth("GET", "/metrics/" + id + '/', null, new MetricTypeReference());
     }
 
     /**
@@ -78,8 +75,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public Metric insert(MetricInsert metric) throws IOException {
-        return api.callWithAuth("POST", "/metrics/", metric, new TypeReference<Metric>() {
-        });
+        return api.callWithAuth("POST", "/metrics/", metric, new MetricTypeReference());
     }
 
     /**
@@ -91,8 +87,7 @@ public class MetricsApi {
      * @throws IOException
      */
     public Msg delete(long id) throws IOException {
-        return api.callWithAuth("DELETE", "/metrics/" + id + '/', null, new TypeReference<Msg>() {
-        });
+        return api.callWithAuth("DELETE", "/metrics/" + id + '/', null, new MsgTypeReference());
     }
 
     /** Metric groups Calls */
@@ -105,8 +100,7 @@ public class MetricsApi {
      */
     public List<MetricGroup> getAllMetricGroups() throws IOException {
         return api.callWithAuth("GET", "/metricgroups/", null,
-                new TypeReference<List<MetricGroup>>() {
-                });
+                new MetricGroupListTypeReference());
     }
 
     /**
@@ -121,8 +115,7 @@ public class MetricsApi {
     public List<MetricGroup> getAllMetricGroups(Options options) throws IOException {
         String url = "/metricgroups/";
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<List<MetricGroup>>() {
-        });
+        return api.callWithAuth("GET", url, null, new MetricGroupListTypeReference());
     }
 
     /**
@@ -135,8 +128,7 @@ public class MetricsApi {
      */
     public MetricGroup getMetricGroup(long id) throws IOException {
         return api.callWithAuth("GET", "/metricgroups/" + id + '/', null,
-                new TypeReference<MetricGroup>() {
-                });
+                new MetricGroupTypeReference());
     }
 
     /**
@@ -150,8 +142,7 @@ public class MetricsApi {
      */
     public MetricGroup insertMetricGroup(MetricGroupInsert metricGroup) throws IOException {
         return api.callWithAuth("POST", "/metricgroups/", metricGroup,
-                new TypeReference<MetricGroup>() {
-                });
+                new MetricGroupTypeReference());
     }
 
     /**
@@ -164,8 +155,7 @@ public class MetricsApi {
      */
     public Msg deleteMetricGroup(long id) throws IOException {
         return api.callWithAuth("DELETE", "/metricgroups/" + id + '/', null,
-                new TypeReference<Msg>() {
-                });
+                new MsgTypeReference());
     }
 
     /**
@@ -178,8 +168,7 @@ public class MetricsApi {
      */
     public List<MetricGroup> addGroupToGroup(long childId, long parentId) throws IOException {
         return api.callWithAuth("POST", "/metricgroups/" + parentId + "/metricgroups/" + childId
-                + '/', null, new TypeReference<List<MetricGroup>>() {
-        });
+                + '/', null, new MetricGroupListTypeReference());
     }
 
     /**
@@ -192,8 +181,7 @@ public class MetricsApi {
      */
     public List<Metric> addMetricToGroup(long metricId, long groupId) throws IOException {
         return api.callWithAuth("POST", "/metricgroups/" + groupId + "/metrics/" + metricId + '/',
-                null, new TypeReference<List<Metric>>() {
-                });
+                null, new MetricListTypeReference());
     }
 
     /**
@@ -206,8 +194,7 @@ public class MetricsApi {
      */
     public List<Metric> getGroupMetrics(long groupId) throws IOException {
         return api.callWithAuth("GET", "/metricgroups/" + groupId + "/metrics/", null,
-                new TypeReference<List<Metric>>() {
-                });
+                new MetricListTypeReference());
     }
 
     /**
@@ -223,8 +210,7 @@ public class MetricsApi {
     public Msg deleteMetricFromGroup(long metricId, long groupId) throws IOException {
         return api.callWithAuth("DELETE",
                 "/metricgroups/" + groupId + "/metrics/" + metricId + '/', null,
-                new TypeReference<Msg>() {
-                });
+                new MsgTypeReference());
     }
 
     /**
@@ -237,8 +223,7 @@ public class MetricsApi {
      */
     public List<MetricGroup> getGroupsFromGroup(long groupId) throws IOException {
         return api.callWithAuth("GET", "/metricgroups/" + groupId + "/metricgroups/", null,
-                new TypeReference<List<MetricGroup>>() {
-                });
+                new MetricGroupListTypeReference());
     }
 
     /**
@@ -254,7 +239,26 @@ public class MetricsApi {
      */
     public Msg deleteGroupFromGroup(long childId, long parentId) throws IOException {
         return api.callWithAuth("DELETE", "/metricgroups/" + parentId + "/metricgroups/" + childId
-                + '/', null, new TypeReference<Msg>() {
-        });
+                + '/', null, new MsgTypeReference());
+    }
+
+    /**
+     * Copied from the Intellij code analysis:
+     * A static inner class does not keep an implicit reference to its enclosing instance.
+     * This prevents a common cause of memory leaks and uses less memory per instance of the class.
+     */
+    private static class MetricListTypeReference extends TypeReference<List<Metric>> {
+    }
+
+    private static class MetricTypeReference extends TypeReference<Metric> {
+    }
+
+    private static class MsgTypeReference extends TypeReference<Msg> {
+    }
+
+    private static class MetricGroupListTypeReference extends TypeReference<List<MetricGroup>> {
+    }
+
+    private static class MetricGroupTypeReference extends TypeReference<MetricGroup> {
     }
 }

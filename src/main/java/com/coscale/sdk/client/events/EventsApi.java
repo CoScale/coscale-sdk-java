@@ -39,8 +39,7 @@ public class EventsApi {
      * @throws IOException
      */
     public List<Event> all() throws IOException {
-        return api.callWithAuth("GET", "/events/", null, new TypeReference<List<Event>>() {
-        });
+        return api.callWithAuth("GET", "/events/", null, new EventListTypeReference());
     }
 
     /**
@@ -54,8 +53,7 @@ public class EventsApi {
     public List<Event> all(Options options) throws IOException {
         String url = "/events/";
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<List<Event>>() {
-        });
+        return api.callWithAuth("GET", url, null, new EventListTypeReference());
     }
 
     /**
@@ -67,8 +65,7 @@ public class EventsApi {
      * @throws IOException
      */
     public Event get(long id) throws IOException {
-        return api.callWithAuth("GET", "/events/" + id + '/', null, new TypeReference<Event>() {
-        });
+        return api.callWithAuth("GET", "/events/" + id + '/', null, new EventTypeReference());
     }
 
     /**
@@ -80,8 +77,7 @@ public class EventsApi {
      * @throws IOException
      */
     public Event insert(EventInsert event) throws IOException {
-        return api.callWithAuth("POST", "/events/", event, new TypeReference<Event>() {
-        });
+        return api.callWithAuth("POST", "/events/", event, new EventTypeReference());
     }
 
     /**
@@ -93,8 +89,7 @@ public class EventsApi {
      * @throws IOException
      */
     public Msg delete(long id) throws IOException {
-        return api.callWithAuth("DELETE", "/events/" + id + '/', null, new TypeReference<Msg>() {
-        });
+        return api.callWithAuth("DELETE", "/events/" + id + '/', null, new MsgTypeReference());
     }
 
     /** Events data end point calls. */
@@ -127,8 +122,7 @@ public class EventsApi {
             first = false;
         }
 
-        return api.callWithAuth("GET", endpoint, null, new TypeReference<List<EventData>>() {
-        });
+        return api.callWithAuth("GET", endpoint, null, new EventDataListTypeReference());
     }
 
     /**
@@ -143,8 +137,7 @@ public class EventsApi {
      */
     public EventData getData(Long eventId, Long dataId) throws IOException {
         return api.callWithAuth("GET", "/events/" + eventId + "/data/get/" + dataId + '/', null,
-                new TypeReference<EventData>() {
-                });
+                new EventDataTypeReference());
     }
 
     /**
@@ -159,8 +152,7 @@ public class EventsApi {
      */
     public EventData insertData(Long eventId, EventDataInsert data) throws IOException {
         return api.callWithAuth("POST", "/events/" + eventId + "/data/", data,
-                new TypeReference<EventData>() {
-                });
+                new EventDataTypeReference());
     }
 
     /**
@@ -175,8 +167,26 @@ public class EventsApi {
      */
     public Msg deleteData(Long eventId, Long dataId) throws IOException {
         return api.callWithAuth("DELETE", "/events/" + eventId + "/data/" + dataId + '/', null,
-                new TypeReference<Msg>() {
-                });
+                new MsgTypeReference());
     }
 
+    /**
+     * Copied from the Intellij code analysis:
+     * A static inner class does not keep an implicit reference to its enclosing instance.
+     * This prevents a common cause of memory leaks and uses less memory per instance of the class.
+     */
+    private static class EventListTypeReference extends TypeReference<List<Event>> {
+    }
+
+    private static class EventTypeReference extends TypeReference<Event> {
+    }
+
+    private static class MsgTypeReference extends TypeReference<Msg> {
+    }
+
+    private static class EventDataListTypeReference extends TypeReference<List<EventData>> {
+    }
+
+    private static class EventDataTypeReference extends TypeReference<EventData> {
+    }
 }
