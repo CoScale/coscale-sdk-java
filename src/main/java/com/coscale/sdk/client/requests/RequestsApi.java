@@ -37,8 +37,7 @@ public class RequestsApi {
      * @throws IOException
      */
     public List<Request> all() throws IOException {
-        return api.callWithAuth("GET", "/requests/", null, new TypeReference<List<Request>>() {
-        });
+        return api.callWithAuth("GET", "/requests/", null, new RequestListTypeReference());
     }
 
     /**
@@ -52,8 +51,7 @@ public class RequestsApi {
     public List<Request> all(Options options) throws IOException {
         String url = "/requests/";
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<List<Request>>() {
-        });
+        return api.callWithAuth("GET", url, null, new RequestListTypeReference());
     }
 
     /**
@@ -65,8 +63,7 @@ public class RequestsApi {
      * @throws IOException
      */
     public Request get(long id) throws IOException {
-        return api.callWithAuth("GET", "/requests/" + id + '/', null, new TypeReference<Request>() {
-        });
+        return api.callWithAuth("GET", "/requests/" + id + '/', null, new RequestTypeReference());
     }
 
     /**
@@ -82,7 +79,17 @@ public class RequestsApi {
     public Request get(long id, Options options) throws IOException {
         String url = "/requests/" + id + '/';
         url += (options.hasQuery() ? "?" : "&") + options.query();
-        return api.callWithAuth("GET", url, null, new TypeReference<Request>() {
-        });
+        return api.callWithAuth("GET", url, null, new RequestTypeReference());
+    }
+
+    /**
+     * Copied from the Intellij code analysis:
+     * A static inner class does not keep an implicit reference to its enclosing instance.
+     * This prevents a common cause of memory leaks and uses less memory per instance of the class.
+     */
+    private static class RequestListTypeReference extends TypeReference<List<Request>> {
+    }
+
+    private static class RequestTypeReference extends TypeReference<Request> {
     }
 }

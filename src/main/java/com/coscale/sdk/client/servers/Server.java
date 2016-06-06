@@ -8,6 +8,7 @@ import com.coscale.sdk.client.metrics.Metric;
 import com.coscale.sdk.client.metrics.State;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 public class Server {
 
@@ -49,14 +50,14 @@ public class Server {
             List<ServerAttribute> attributes) {
         this.id = id;
         this.source = source;
-        this.metrics = metrics;
+        this.metrics = Lists.newArrayList(metrics);
         this.description = description;
         this.name = name;
         this.state = state;
-        this.children = children;
+        this.children = Lists.newArrayList(children);
         this.type = type;
         this.version = version;
-        this.attributes = attributes;
+        this.attributes = Lists.newArrayList(attributes);
     }
 
     public Server() {

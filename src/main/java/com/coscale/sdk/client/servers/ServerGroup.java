@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.coscale.sdk.client.metrics.State;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 public class ServerGroup {
 
@@ -44,11 +45,11 @@ public class ServerGroup {
             String name, State state, List<ServerGroup> servergroups, String type, Long version) {
         this.id = id;
         this.source = source;
-        this.servers = servers;
+        this.servers = Lists.newArrayList(servers);
         this.description = description;
         this.name = name;
         this.state = state;
-        this.servergroups = servergroups;
+        this.servergroups = Lists.newArrayList(servergroups);
         this.type = type;
         this.version = version;
     }

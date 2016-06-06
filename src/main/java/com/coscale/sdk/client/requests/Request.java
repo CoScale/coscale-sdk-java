@@ -8,6 +8,7 @@ import com.coscale.sdk.client.commons.Protocol;
 import com.coscale.sdk.client.metrics.State;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 public class Request {
 
@@ -60,7 +61,7 @@ public class Request {
         this.id = id;
         this.parentId = parentId;
         this.classifierType = classifierType;
-        this.requests = requests;
+        this.requests = Lists.newArrayList(requests);
         this.source = source;
         this.description = description;
         this.priority = priority;
