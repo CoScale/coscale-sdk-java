@@ -29,7 +29,7 @@ public class ApiClient {
     private final String APPID;
 
     /** API_PATH, API_VERSION for request URL. */
-    private final String API_PATH = "api";
+    private static final String API_PATH = "api";
     private String API_VERSION = "v1";
 
     /** URL path separator */
@@ -350,6 +350,8 @@ public class ApiClient {
      *            object with data for the request. This parameter can be null.
      * @param valueType
      *            is the type expected.
+     * @param auth
+     *            true if the call requires authentication, false if not.
      * @return The Object received as a result for the request.
      * @throws IOException
      */
