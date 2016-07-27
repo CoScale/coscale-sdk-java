@@ -233,11 +233,3 @@ apiFactory.getApiClient().setConnectionTimeout(1000);
 apiFactory.getApiClient().setReadTimeout(1000);
 ```
 
-
-### API Server URL
-
-The API base URI can be changed for testing purposes
-
-```java
-apiFactory.getApiClient().setBaseURL("http://new-server.coscale.com");
-```
