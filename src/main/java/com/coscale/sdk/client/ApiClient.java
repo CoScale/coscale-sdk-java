@@ -24,21 +24,16 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 public class ApiClient {
 
-    /** Credentials used for authentication. */
-    private final Credentials credentials;
+    /** The default API base URL. */
+    public static final String DEFAULT_API_BASE_URL = "https://api.coscale.com";
 
-    /** The client application id. */
-    private final String APPID;
+    /** The default user agent. */
+    public static final String DEFAULT_USER_AGENT = "CoScale Java SDK";
 
-    /** API_PATH, API_VERSION for request URL. */
-    private final String API_PATH = "api";
-    private String API_VERSION = "v1";
-
-    /** URL path separator */
-    private String PATH_DIV = "/";
-
-    /** The API base URL. */
-    private String API_BASE_URL = "https://api.coscale.com";
+    /** Parameters used to construct the API paths. */
+    private static final String API_VERSION = "v1";
+    private static final String API_PATH = "api";
+    private static final String PATH_DIV = "/";
 
     /** The name of the HTTP header that contains the authorization token. */
     private static final String AUTH_HEADER = "HTTPAuthorization";
@@ -46,19 +41,29 @@ public class ApiClient {
     /** AUTH_RETRIES is the number of login attempts before failing. */
     private static final int AUTH_RETRIES = 3;
 
-    /** Trigger a timeout if the API connection takes more than x milliseconds. */
-    private static int API_CONN_TIMEOUT_MS = 15 * 1000;
-
-    /** Trigger a timeout if the API read takes more than x milliseconds. */
-    private static int API_READ_TIMEOUT_MS = 15 * 1000;
-
     /** SOURCE will identify the source of the created resources */
     private static String SOURCE = "Java SDK";
+
+    /** Trigger a timeout if the API connection takes more than x milliseconds. */
+    private int apiConnTimeoutMS = 15 * 1000;
+
+    /** Trigger a timeout if the API read takes more than x milliseconds. */
+    private int apiReadTimeoutMS = 15 * 1000;
+
+    /** Credentials used for authentication. */
+    private final Credentials credentials;
+
+    /** The client application id. */
+    private final String APPID;
 
     /** Received after the login, and used as HTTPAuthorization on next calls. */
     private String token;
 
-    private String userAgent = "";
+    /** The user-agent used by the HTTP client. */
+    private String userAgent;
+
+    /** The api base URL. */
+    private String apiBaseURL;
 
     /** Json deserialization error counter. */
     private int jsonDeserializationExceptions;
@@ -80,30 +85,37 @@ public class ApiClient {
 
     /**
      * ApiClient constructor.
-     *
-     * @param appId
-     *            The CoScale Application id.
-     * @param credentials
-     *            Api authentication informations.
+     * @param appId The CoScale Application id.
+     * @param credentials Api authentication information.
+     * @param agentString HTTP "User-Agent" header.
+     * @param apiBaseURL The API base url, eg. https://api.coscale.com
      */
-    public ApiClient(String appId, Credentials credentials) {
-        this(appId, credentials, "Default Agent String");
+    public ApiClient(String appId, Credentials credentials, String agentString, String apiBaseURL) {
+        this.credentials = credentials;
+        this.APPID = appId;
+        this.userAgent = agentString;
+        this.apiBaseURL = apiBaseURL;
     }
 
     /**
      * ApiClient Constructor.
      *
-     * @param appId
-     *            The CoScale Application id.
-     * @param credentials
-     *            API authentication informations.
-     * @param agentString
-     *            HTTP "User-Agent" header
+     * @param appId The CoScale Application id.
+     * @param credentials API authentication informations.
+     * @param agentString HTTP "User-Agent" header
      */
     public ApiClient(String appId, Credentials credentials, String agentString) {
-        this.credentials = credentials;
-        this.APPID = appId;
-        this.userAgent = agentString;
+        this(appId, credentials, agentString, DEFAULT_API_BASE_URL);
+    }
+
+    /**
+     * ApiClient constructor.
+     *
+     * @param appId The CoScale Application id.
+     * @param credentials Api authentication informations.
+     */
+    public ApiClient(String appId, Credentials credentials) {
+        this(appId, credentials, DEFAULT_USER_AGENT);
     }
 
     /**
@@ -131,7 +143,7 @@ public class ApiClient {
      * @return String containing the CoScale domain.
      */
     public String getBaseURL() {
-        return API_BASE_URL;
+        return this.apiBaseURL;
     }
 
     /**
@@ -140,7 +152,7 @@ public class ApiClient {
      * @param url
      */
     public void setBaseURL(String url) {
-        this.API_BASE_URL = url;
+        this.apiBaseURL = url;
     }
 
     /**
@@ -149,7 +161,7 @@ public class ApiClient {
      * @return int connection timeout value.
      */
     public int getConnectionTimeout() {
-        return API_CONN_TIMEOUT_MS;
+        return this.apiConnTimeoutMS;
     }
 
     /**
@@ -159,7 +171,7 @@ public class ApiClient {
      *            in ms.
      */
     public void setConnectionTimeout(int timeout) {
-        API_CONN_TIMEOUT_MS = timeout;
+        this.apiConnTimeoutMS = timeout;
     }
 
     /**
@@ -168,7 +180,7 @@ public class ApiClient {
      * @return int read timeout value.
      */
     public int getReadTimeout() {
-        return API_READ_TIMEOUT_MS;
+        return this.apiReadTimeoutMS;
     }
 
     /**
@@ -178,7 +190,7 @@ public class ApiClient {
      *            in ms.
      */
     public void setReadTimeout(int timeout) {
-        API_READ_TIMEOUT_MS = timeout;
+        this.apiReadTimeoutMS = timeout;
     }
 
     /**
@@ -195,7 +207,7 @@ public class ApiClient {
      *
      * @param source
      */
-    public void setSource(String source) {
+    public static void setSource(String source) {
         SOURCE = source;
     }
 
@@ -232,8 +244,8 @@ public class ApiClient {
             conn = (HttpURLConnection) url.openConnection();
 
             // Set connection timeout.
-            conn.setConnectTimeout(API_CONN_TIMEOUT_MS);
-            conn.setReadTimeout(API_READ_TIMEOUT_MS);
+            conn.setConnectTimeout(this.apiConnTimeoutMS);
+            conn.setReadTimeout(this.apiReadTimeoutMS);
 
             // Setup the connection.
             conn.setDoOutput(true);

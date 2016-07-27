@@ -1,5 +1,6 @@
 package com.coscale.sdk.client;
 
+import com.coscale.sdk.client.applications.ApplicationsApi;
 import com.coscale.sdk.client.data.DataApi;
 import com.coscale.sdk.client.events.EventsApi;
 import com.coscale.sdk.client.metrics.MetricsApi;
@@ -20,13 +21,21 @@ public class ApiFactory {
     /**
      * ApiFactory Constructor.
      *
-     * @param appId
-     *            the CoScale application id.
-     * @param credentials
-     *            the credentials used for login.
+     * @param appId the CoScale application id.
+     * @param credentials the credentials used for login.
      */
     public ApiFactory(String appId, Credentials credentials) {
         this.api = new ApiClient(appId, credentials);
+    }
+
+    /**
+     * ApiFactory Constructor.
+     *
+     * @param appId the CoScale application id.
+     * @param credentials the credentials used for login.
+     */
+    public ApiFactory(String appId, Credentials credentials, String baseUrl) {
+        this.api = new ApiClient(appId, credentials, ApiClient.DEFAULT_USER_AGENT, baseUrl);
     }
 
     /**
@@ -82,4 +91,15 @@ public class ApiFactory {
     public RequestsApi getRequestsApi() {
         return new RequestsApi(api);
     }
+
+
+    /**
+     * Get a instance of ApplicationsApi.
+     *
+     * @return ApplicationsApi.
+     */
+    public ApplicationsApi getApplicationsApi() {
+        return new ApplicationsApi(api);
+    }
+
 }
