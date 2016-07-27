@@ -468,8 +468,8 @@ public class ApiClient {
             conn = (HttpURLConnection) url.openConnection();
 
             // Set connection timeout.
-            conn.setConnectTimeout(API_CONN_TIMEOUT_MS);
-            conn.setReadTimeout(API_READ_TIMEOUT_MS);
+            conn.setConnectTimeout(this.apiConnTimeoutMS);
+            conn.setReadTimeout(this.apiReadTimeoutMS);
 
             // Setup the connection.
             conn.setDoOutput(true);
