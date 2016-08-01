@@ -71,9 +71,6 @@ public class ApiClient {
     /** Field name in form upload for binary data. */
     private String attachmentName = "bData";
 
-    /** Filename. */
-    private String attachmentFileName = "upload";
-
     /** CRLF. */
     private String crlf = "\r\n";
 
@@ -498,11 +495,11 @@ public class ApiClient {
 
             if (payload != null) {
                 DataOutputStream request = new DataOutputStream(conn.getOutputStream());
-
+                
                 request.writeBytes(this.twoHyphens + this.boundary + this.crlf);
                 request.writeBytes("Content-Disposition: form-data; name=\"" +
                     this.attachmentName + "\";filename=\"" +
-                    this.attachmentFileName + "\"" + this.crlf);
+                    payload.filename + "\"" + this.crlf);
                 request.writeBytes(this.crlf);
 
                 request.write(payload.bData);
