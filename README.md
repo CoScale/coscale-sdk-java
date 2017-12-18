@@ -215,12 +215,12 @@ try {
 
 ## Advanced Configuration
 
-### Source
+### On-premise environments
 
-The default source for resources is "Java SDK". This can be changed using:
+For on-premise environments, the API base URI has to be set in the ApiFactory. Note that there is no ```/``` at the end of the base url.
 
 ```java
-apiFactory.getApiClient().setSource("New Source");
+apiFactory.getApiClient().setBaseURL("http://coscale.yourcompany.com");
 ```
 
 ### Timeouts
@@ -231,12 +231,4 @@ These times can be changed using:
 ```java
 apiFactory.getApiClient().setConnectionTimeout(1000);
 apiFactory.getApiClient().setReadTimeout(1000);
-```
-
-### API Server URL
-
-The API base URI can be set for on-premise environments. Note that there is no / at the end of the base url.
-
-```java
-apiFactory.getApiClient().setBaseURL("http://coscale.yourcompany.com");
 ```
