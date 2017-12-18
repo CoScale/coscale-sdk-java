@@ -233,3 +233,10 @@ apiFactory.getApiClient().setConnectionTimeout(1000);
 apiFactory.getApiClient().setReadTimeout(1000);
 ```
 
+### API Server URL
+
+The API base URI can be set for on-premise environments. Note that there is no / at the end of the base url.
+
+```java
+apiFactory.getApiClient().setBaseURL("http://coscale.yourcompany.com");
+```
