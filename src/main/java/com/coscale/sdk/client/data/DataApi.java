@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * CoScale API client used to insert data.
- * 
+ *
  * @author cristi
  *
  */
@@ -19,7 +19,7 @@ public class DataApi {
 
     /**
      * DataApi contructor.
-     * 
+     *
      * @param api
      *            ApiClient.
      */
@@ -29,7 +29,7 @@ public class DataApi {
 
     /**
      * Insert data into the data-store
-     * 
+     *
      * @param data
      * @return Msg containing the api response.
      * @throws IOException

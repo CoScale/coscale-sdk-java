@@ -1,12 +1,14 @@
 package com.coscale.sdk.client;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.coscale.sdk.client.commons.Options;
+import com.coscale.sdk.client.data.BinaryData;
 import com.coscale.sdk.client.exceptions.CoscaleApiException;
 import com.coscale.sdk.client.utils.MapperSupport;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -65,6 +67,18 @@ public class ApiClient {
 
     /** Json deserialization error counter. */
     private int jsonDeserializationExceptions;
+
+    /** Field name in form upload for binary data. */
+    private String attachmentName = "bData";
+
+    /** CRLF. */
+    private String crlf = "\r\n";
+
+    /** Two hypens. */
+    private String twoHyphens = "--";
+
+    /** Boundary for binary file upload form. */
+    private String boundary =  "*****";
 
     /**
      * ApiClient constructor.
@@ -211,7 +225,7 @@ public class ApiClient {
      *            used by request.
      * @param uri
      *            of the API call.
-     * @param data
+     * @param payload
      *            in string format to pass to the request.
      * @return String response for the request.
      * @throws IOException
@@ -301,7 +315,7 @@ public class ApiClient {
                 : getGlobalRequestURL("/users/login/");
         Credentials.TokenHelper data = call("POST", uri, credentials,
                 new TypeReference<Credentials.TokenHelper>() {
-                }, false);
+                }, false, false);
 
         token = data.token;
     }
@@ -336,7 +350,53 @@ public class ApiClient {
                 login();
             }
             try {
-                return call(method, getAppRequestURL(endpoint), obj, valueType, true);
+                return call(method, getAppRequestURL(endpoint), obj, valueType, true, false);
+            } catch (CoscaleApiException e) {
+                if (e.statusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    this.token = null; // will trigger new login
+                } else {
+                    throw e;
+                }
+            }
+
+            tries++;
+        } while (tries <= AUTH_RETRIES);
+        throw new CoscaleApiException(responseCode, "Authentication failed.");
+    }
+
+    /**
+     * callWithAuthBinary is used to make requests that require Authentication on
+     * CoScale API.
+     *
+     * @param method
+     *            request HTTP method.
+     * @param endpoint
+     *            The url for the request.
+     * @param data
+     *            object with data for the request. This parameter can be null.
+     * @param valueType
+     *            is the type expected.
+     * @param binary
+     *          is the action a binary upload.
+     * @return The Object received as a result for the request.
+     * @throws IOException
+     */
+    public <T> T callWithAuthBinary(String method, String endpoint, BinaryData data, TypeReference<T> valueType,
+            boolean binary) throws IOException {
+        // Not authenticated yet, try login.
+        if (this.token == null) {
+            login();
+        }
+
+        // Do the actual request.
+        int tries = 0;
+        int responseCode = 0;
+        do {
+            if (this.token == null) {
+                login();
+            }
+            try {
+                return call(method, getAppRequestURL(endpoint), data, valueType, true, binary);
             } catch (CoscaleApiException e) {
                 if (e.statusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
                     this.token = null; // will trigger new login
@@ -365,19 +425,120 @@ public class ApiClient {
      * @throws IOException
      */
     public <T> T call(String method, String url, Object obj, TypeReference<T> valueType,
-            boolean auth) throws IOException {
+            boolean auth, boolean binary) throws IOException {
         try {
-
-            String res = this.doHttpRequest(method, url, objectToJson(obj), auth);
+            String res;
+            if (!binary) {
+                res = this.doHttpRequest(method, url, objectToJson(obj), auth);
+            } else {
+                res = this.doHttpRequestBinary(method, url, (BinaryData) obj, auth);
+            }
             if (res.length() == 0) {
                 return null;
             }
+
             return MapperSupport.getInstance().readValue(res, valueType);
         } catch (JsonMappingException | JsonParseException e) {
             jsonDeserializationExceptions++;
             throw e;
         } catch (IOException e) {
             throw e;
+        }
+    }
+
+    /**
+     * Do an HTTP request with a binary upload in it.
+     * @param method The method
+     * @param uri The url
+     * @param payload The object with the data
+     * @param authenticate The authentication token.
+     * @return String response for the request.
+     * @throws IOException
+     */
+    public String doHttpRequestBinary(String method, String uri, BinaryData payload, boolean authenticate) throws IOException {
+        URL url;
+        HttpURLConnection conn = null;
+        int responseCode = -1;
+
+        try {
+            url = new URL(uri);
+            conn = (HttpURLConnection) url.openConnection();
+
+            // Set connection timeout.
+            conn.setConnectTimeout(this.apiConnTimeoutMS);
+            conn.setReadTimeout(this.apiReadTimeoutMS);
+
+            // Setup the connection.
+            conn.setDoOutput(true);
+            conn.setInstanceFollowRedirects(false);
+            conn.setRequestMethod(method);
+            conn.setRequestProperty("Accept", "application/json");
+
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Cache-Control", "no-cache");
+
+            conn.setUseCaches(false);
+
+            // add request headers.
+            conn.setRequestProperty("User-Agent", this.userAgent);
+
+            if (authenticate) {
+                conn.setRequestProperty(AUTH_HEADER, this.token);
+            }
+
+            if (payload != null && ("POST".equals(method) || "PUT".equals(method))) {
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + this.boundary);
+                conn.setRequestProperty("Content-Length", Integer.toString(payload.bData.length).trim());
+                conn.setRequestProperty("Content-Transfer-Encoding", "binary");
+                conn.setRequestProperty("Content-Disposition", "form-data; name=\"bData\";");
+            }
+
+            if (payload != null) {
+                DataOutputStream request = new DataOutputStream(conn.getOutputStream());
+                
+                request.writeBytes(this.twoHyphens + this.boundary + this.crlf);
+                request.writeBytes("Content-Disposition: form-data; name=\"" +
+                    this.attachmentName + "\";filename=\"" +
+                    payload.filename + "\"" + this.crlf);
+                request.writeBytes(this.crlf);
+
+                request.write(payload.bData);
+
+                request.writeBytes(this.crlf);
+                request.writeBytes(this.twoHyphens + this.boundary +
+                    this.twoHyphens + this.crlf);
+
+                request.flush();
+                request.close();
+            }
+
+            // Check the response code.
+            responseCode = conn.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                String errorMessage = convertStreamToString(conn.getErrorStream());
+
+                throw new CoscaleApiException(responseCode, "Failed : HTTP error code : "
+                        + responseCode + " msg: " + conn.getResponseMessage() + " url: "
+                        + conn.getURL() + " method " + conn.getRequestMethod() + " error message "
+                        + errorMessage);
+            }
+
+            return convertStreamToString(conn.getInputStream());
+        } catch (IOException e) {
+            if (conn != null) {
+                // return also the response from the API
+                String errorMessage = convertStreamToString(conn.getErrorStream());
+                String message = e.getMessage();
+                if (errorMessage.length() > 0) {
+                    message += " error " + errorMessage;
+                }
+                throw new CoscaleApiException(responseCode, message, e);
+            }
+            throw e;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
     }
 

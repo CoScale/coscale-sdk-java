@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.coscale.sdk.client.ApiClient;
 import com.coscale.sdk.client.commons.Msg;
 import com.coscale.sdk.client.commons.Options;
+import com.coscale.sdk.client.data.BinaryData;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
@@ -179,4 +180,17 @@ public class EventsApi {
                 });
     }
 
+    /**
+     * Update an existing event with binary data.
+     * @param eventId The event id.
+     * @param dataId The event data id.
+     * @param data The data to upload.
+     * @return Msg response message.
+     * @throws IOException
+     */
+    public Msg uploadBinary(Long eventId, Long dataId, BinaryData data) throws IOException {
+        return api.callWithAuthBinary("PUT", "/events/" + eventId + "/data/" + dataId + "/binary/", data,
+                new TypeReference<Msg>() {
+                }, true);
+    }
 }
